@@ -7,6 +7,9 @@ import "./commands/about";
 import "./commands/menu";
 
 import { bot } from "./bot";
+import { setupErrorHandler } from "./middleware/errorHandler";
+
+setupErrorHandler(bot);
 
 bot.launch();
 
