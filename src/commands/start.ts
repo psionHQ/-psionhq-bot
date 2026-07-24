@@ -1,18 +1,18 @@
-import { bot } from "../bot";
+import { bot } from '../bot';
+import { getMainMenuKeyboard } from '../utils/keyboard';
 
+/**
+ * /start command handler
+ * Displays welcome message with interactive main menu
+ */
 bot.start((ctx) => {
-  ctx.reply(`
+  const welcomeMessage = `
 👋 Добро пожаловать в PSI Network!
 
 Это официальный бот проекта @PsionHQ.
 
-🚀 Скоро здесь появятся:
-• Новости проекта
-• Информация о токене PSI
-• Whitepaper
-• Roadmap
-• Сообщество
+Выберите интересующий вас раздел:
+`;
 
-Добро пожаловать!
-`);
+  ctx.reply(welcomeMessage, getMainMenuKeyboard());
 });
