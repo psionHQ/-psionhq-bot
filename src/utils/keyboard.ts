@@ -15,7 +15,7 @@ export function getMainMenuKeyboard() {
   );
 
   // Arrange buttons in 2-column layout
-  const rows: typeof buttons[][] = [];
+  const rows: (typeof buttons)[] = [];
   for (let i = 0; i < buttons.length; i += 2) {
     rows.push(buttons.slice(i, i + 2));
   }
