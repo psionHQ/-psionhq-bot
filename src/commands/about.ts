@@ -1,7 +1,7 @@
 import { bot } from "../bot";
 
-bot.command("about", (ctx) => {
-  ctx.reply(`
+bot.command("about", async (ctx) => {
+  await ctx.reply(`
 🧠 PSI Network
 
 ⚛️ Quantum Blockchain

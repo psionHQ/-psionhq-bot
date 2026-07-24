@@ -5,7 +5,7 @@ import { getMainMenuKeyboard } from '../utils/keyboard';
  * /start command handler
  * Displays welcome message with interactive main menu
  */
-bot.start((ctx) => {
+bot.start(async (ctx) => {
   const welcomeMessage = `
 👋 Добро пожаловать в PSI Network!
 
@@ -16,5 +16,5 @@ bot.start((ctx) => {
 
   const keyboard = getMainMenuKeyboard();
 
-  ctx.reply(welcomeMessage, keyboard);
+  await ctx.reply(welcomeMessage, keyboard);
 });
