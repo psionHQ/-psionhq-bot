@@ -2,8 +2,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const BOT_TOKEN = process.env.BOT_TOKEN;
+const token = process.env.BOT_TOKEN;
 
-if (!BOT_TOKEN) {
-  throw new Error("BOT_TOKEN not found");
+if (!token) {
+  throw new Error("BOT_TOKEN environment variable is not set");
 }
+
+export const BOT_TOKEN: string = token;
