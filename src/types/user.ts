@@ -11,6 +11,7 @@ export interface User {
   isActive: boolean;
   lastLoginAt: Date | null;
   registeredAt: Date;
+  referralCode: string | null;
 }
 
 export interface TelegramUserRegistrationData {
@@ -18,4 +19,5 @@ export interface TelegramUserRegistrationData {
   username: string | null;
   firstName: string;
   languageCode: string | undefined;
+  referredByCode?: string | null;
 }

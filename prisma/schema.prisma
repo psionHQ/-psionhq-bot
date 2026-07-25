@@ -42,11 +42,26 @@ model User {
   isActive      Boolean       @default(true)
   lastLoginAt   DateTime?
   registeredAt  DateTime      @default(now())
+  referralCode  String?       @unique @map("referral_code")
   wallet        Wallet?
   adminActions  AdminAction[] @relation("AdminActions")
   targetActions AdminAction[] @relation("TargetActions")
+  referrals     Referral[]    @relation("ReferrerReferrals")
+  referral      Referral?     @relation("ReferredUserReferral")
 
   @@map("users")
+}
+
+model Referral {
+  id         Int      @id @default(autoincrement())
+  referrerId Int
+  referredId Int      @unique
+  createdAt  DateTime @default(now())
+  referrer   User     @relation("ReferrerReferrals", fields: [referrerId], references: [id])
+  referred   User     @relation("ReferredUserReferral", fields: [referredId], references: [id])
+
+  @@index([referrerId])
+  @@map("referrals")
 }
 
 model Wallet {

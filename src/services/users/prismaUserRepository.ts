@@ -12,6 +12,7 @@ function mapToUser(row: {
   isActive: boolean;
   lastLoginAt: Date | null;
   registeredAt: Date;
+  referralCode?: string | null;
 }): User {
   return {
     id: row.id,
@@ -23,6 +24,7 @@ function mapToUser(row: {
     isActive: row.isActive,
     lastLoginAt: row.lastLoginAt,
     registeredAt: row.registeredAt,
+    referralCode: row.referralCode ?? null,
   };
 }
 
@@ -56,6 +58,7 @@ export class PrismaUserRepository implements UserRepository {
         isActive: entity.isActive,
         lastLoginAt: entity.lastLoginAt,
         registeredAt: entity.registeredAt,
+        referralCode: entity.referralCode,
       },
     });
     return mapToUser(user);

@@ -2,7 +2,7 @@ import { bot } from '../bot';
 import { LANGUAGE_CALLBACKS, MENU_CALLBACKS } from '../constants/menu';
 import { getLanguageSelectionKeyboard, getMenuItemByCallback } from '../utils/keyboard';
 import { logger } from '../utils/logger';
-import { ledgerService, userService, walletService } from '../services';
+import { ledgerService, referralService, userService, walletService } from '../services';
 import type { Transaction, User, UserLanguage, Wallet } from '../types';
 
 /**
@@ -353,5 +353,65 @@ handleMenuItemUnderDevelopment(MENU_CALLBACKS.COMMUNITY);
 
 // About menu item
 handleMenuItemUnderDevelopment(MENU_CALLBACKS.ABOUT);
+
+// ---------------------------------------------------------------------------
+// Referral menu item
+// ---------------------------------------------------------------------------
+
+const REFERRAL_TRANSLATIONS = {
+  en: {
+    title: '🔗 Referral Program',
+    yourCode: 'Your referral code',
+    yourLink: 'Your referral link',
+    referred: 'Friends invited',
+    noCode: 'Referral code unavailable. Please restart the bot with /start.',
+  },
+  ru: {
+    title: '🔗 Реферальная программа',
+    yourCode: 'Ваш реферальный код',
+    yourLink: 'Ваша реферальная ссылка',
+    referred: 'Приглашённых друзей',
+    noCode: 'Реферальный код недоступен. Пожалуйста, перезапустите бота командой /start.',
+  },
+} as const;
+
+bot.action(MENU_CALLBACKS.REFERRAL, async (ctx) => {
+  if (!ctx.from) {
+    await ctx.answerCbQuery();
+    return;
+  }
+
+  const user =
+    (await userService.getByTelegramId(ctx.from.id)) ??
+    (await userService.registerOrUpdate({
+      telegramId: ctx.from.id,
+      username: ctx.from.username ?? null,
+      firstName: ctx.from.first_name,
+      languageCode: ctx.from.language_code,
+    }));
+
+  await ctx.answerCbQuery();
+
+  const lang = user.language;
+  const text = REFERRAL_TRANSLATIONS[lang];
+
+  if (!user.referralCode) {
+    await ctx.reply(text.noCode);
+    return;
+  }
+
+  const stats = user.id !== undefined ? await referralService.getStats(user.id) : { count: 0 };
+  const link = referralService.buildLink(user.referralCode);
+
+  const message = `${text.title}
+
+🏷️ ${text.yourCode}: \`${user.referralCode}\`
+🌐 ${text.yourLink}:
+${link}
+
+👥 ${text.referred}: ${stats.count}`;
+
+  await ctx.reply(message, { parse_mode: 'Markdown' });
+});
 
 logger.info('✅ Menu callbacks registered');

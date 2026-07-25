@@ -17,8 +17,12 @@ export class InMemoryUserRepository implements UserRepository {
   }
 
   async create(entity: User): Promise<User> {
-    this.users.set(entity.telegramId, entity);
-    return entity;
+    const userWithDefaults: User = {
+      ...entity,
+      referralCode: entity.referralCode ?? null,
+    };
+    this.users.set(entity.telegramId, userWithDefaults);
+    return userWithDefaults;
   }
 
   async update(id: number, entity: Partial<User>): Promise<User> {
