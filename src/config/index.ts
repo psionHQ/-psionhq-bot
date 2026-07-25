@@ -9,6 +9,12 @@ if (!botToken) {
   throw new Error('BOT_TOKEN environment variable is not set');
 }
 
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL environment variable is not set');
+}
+
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 const logLevel = (process.env.LOG_LEVEL ?? 'info') as LogLevel;
 
@@ -20,6 +26,9 @@ export const config: AppConfig = {
   },
   bot: {
     token: botToken,
+  },
+  database: {
+    url: databaseUrl,
   },
   logger: {
     level: logLevel,

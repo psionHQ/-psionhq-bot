@@ -9,6 +9,9 @@ export interface AppConfig {
   bot: {
     token: string;
   };
+  database: {
+    url: string;
+  };
   logger: {
     level: LogLevel;
   };

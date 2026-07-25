@@ -1,7 +1,8 @@
-import { InMemoryUserRepository } from './inMemoryUserRepository';
+import { prisma } from '../../database/prisma';
+import { PrismaUserRepository } from './prismaUserRepository';
 import { UserService } from './userService';
 
-const userRepository = new InMemoryUserRepository();
+const userRepository = new PrismaUserRepository(prisma);
 
 export const userService = new UserService(userRepository);
 
