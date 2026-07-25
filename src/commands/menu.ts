@@ -14,7 +14,7 @@ const DEVELOPMENT_MESSAGE = '🚧 This section is under development.\n\nStay tun
  * @param callback - The callback action identifier for logging
  */
 function handleMenuItemUnderDevelopment(callback: string) {
-  return bot.action(callback, (ctx) => {
+  return bot.action(callback, async (ctx) => {
     // Get menu item details for logging
     const menuItem = getMenuItemByCallback(callback);
     const itemName = menuItem?.label || 'Unknown';
@@ -25,7 +25,7 @@ function handleMenuItemUnderDevelopment(callback: string) {
     ctx.answerCbQuery();
 
     // Send development message
-    ctx.reply(DEVELOPMENT_MESSAGE);
+    await ctx.reply(DEVELOPMENT_MESSAGE);
   });
 }
 

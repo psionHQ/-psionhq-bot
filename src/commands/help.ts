@@ -1,7 +1,7 @@
 import { bot } from "../bot";
 
-bot.command("help", (ctx) => {
-  ctx.reply(`
+bot.command("help", async (ctx) => {
+  await ctx.reply(`
 📖 Доступные команды:
 
 /start — начало работы
