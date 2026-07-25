@@ -17,6 +17,20 @@ enum UserLanguage {
   ru
 }
 
+enum TransactionType {
+  TRANSFER
+  MINT
+  BURN
+  REWARD
+  FEE
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
 model User {
   id           Int          @id @default(autoincrement())
   telegramId   BigInt       @unique
@@ -31,12 +45,32 @@ model User {
 }
 
 model Wallet {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  address   String   @unique
-  balance   Decimal  @default(0) @db.Decimal(18, 8)
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  id                   Int           @id @default(autoincrement())
+  userId               Int           @unique
+  address              String        @unique
+  balance              Decimal       @default(0) @db.Decimal(18, 8)
+  createdAt            DateTime      @default(now())
+  user                 User          @relation(fields: [userId], references: [id])
+  outgoingTransactions Transaction[] @relation("WalletOutgoingTransactions")
+  incomingTransactions Transaction[] @relation("WalletIncomingTransactions")
 
   @@map("wallets")
+}
+
+model Transaction {
+  id           String            @id @default(uuid()) @db.Uuid
+  fromWalletId Int?
+  toWalletId   Int?
+  amount       Decimal           @db.Decimal(18, 8)
+  type         TransactionType
+  status       TransactionStatus
+  memo         String?
+  createdAt    DateTime          @default(now())
+  fromWallet   Wallet?           @relation("WalletOutgoingTransactions", fields: [fromWalletId], references: [id])
+  toWallet     Wallet?           @relation("WalletIncomingTransactions", fields: [toWalletId], references: [id])
+
+  @@index([fromWalletId])
+  @@index([toWalletId])
+  @@index([createdAt])
+  @@map("transactions")
 }

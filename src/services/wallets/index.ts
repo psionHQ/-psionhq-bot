@@ -2,7 +2,7 @@ import { prisma } from '../../database/prisma';
 import { PrismaWalletRepository } from './prismaWalletRepository';
 import { WalletService } from './walletService';
 
-const walletRepository = new PrismaWalletRepository(prisma);
+export const walletRepository = new PrismaWalletRepository(prisma);
 
 export const walletService = new WalletService(walletRepository);
 
