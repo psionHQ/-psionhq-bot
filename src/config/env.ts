@@ -1,11 +1,3 @@
-import dotenv from "dotenv";
+import { config } from './index';
 
-dotenv.config();
-
-const token = process.env.BOT_TOKEN;
-
-if (!token) {
-  throw new Error("BOT_TOKEN environment variable is not set");
-}
-
-export const BOT_TOKEN: string = token;
+export const BOT_TOKEN: string = config.bot.token;

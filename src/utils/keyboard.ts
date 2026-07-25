@@ -1,5 +1,5 @@
 import { Markup } from 'telegraf';
-import { MENU_ITEMS } from '../constants/menu';
+import { LANGUAGE_CALLBACKS, MENU_ITEMS } from '../constants/menu';
 
 /**
  * Generate main menu keyboard with inline buttons
@@ -32,4 +32,13 @@ export function getMainMenuKeyboard() {
  */
 export function getMenuItemByCallback(callback: string) {
   return MENU_ITEMS.find((item) => item.callback === callback);
+}
+
+export function getLanguageSelectionKeyboard() {
+  return Markup.inlineKeyboard([
+    [
+      Markup.button.callback('🇺🇸 English', LANGUAGE_CALLBACKS.ENGLISH),
+      Markup.button.callback('🇷🇺 Русский', LANGUAGE_CALLBACKS.RUSSIAN),
+    ],
+  ]);
 }

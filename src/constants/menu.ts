@@ -12,6 +12,13 @@ export const MENU_CALLBACKS = {
   WEBSITE: 'menu_website',
   COMMUNITY: 'menu_community',
   ABOUT: 'menu_about',
+  PROFILE: 'menu_profile',
+  LANGUAGE: 'menu_language',
+} as const;
+
+export const LANGUAGE_CALLBACKS = {
+  ENGLISH: 'lang_en',
+  RUSSIAN: 'lang_ru',
 } as const;
 
 /**
@@ -69,5 +76,17 @@ export const MENU_ITEMS: MenuItem[] = [
     emoji: 'ℹ️',
     callback: MENU_CALLBACKS.ABOUT,
     description: 'About PSI Network',
+  },
+  {
+    label: 'Profile',
+    emoji: '👤',
+    callback: MENU_CALLBACKS.PROFILE,
+    description: 'Your profile details',
+  },
+  {
+    label: 'Language',
+    emoji: '🌍',
+    callback: MENU_CALLBACKS.LANGUAGE,
+    description: 'Language settings',
   },
 ];

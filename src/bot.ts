@@ -1,4 +1,4 @@
 import { Telegraf } from "telegraf";
-import { BOT_TOKEN } from "./config/env";
+import { config } from "./config";
 
-export const bot = new Telegraf(BOT_TOKEN);
+export const bot = new Telegraf(config.bot.token);
