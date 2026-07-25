@@ -25,6 +25,18 @@ model User {
   language     UserLanguage @default(en)
   role         UserRole     @default(user)
   registeredAt DateTime     @default(now())
+  wallet       Wallet?
 
   @@map("users")
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  address   String   @unique
+  balance   Decimal  @default(0) @db.Decimal(18, 8)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("wallets")
 }

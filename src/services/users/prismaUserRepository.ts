@@ -3,6 +3,7 @@ import type { User, UserLanguage, UserRole } from '../../types';
 import type { UserRepository } from './interfaces';
 
 function mapToUser(row: {
+  id: number;
   telegramId: bigint;
   username: string | null;
   firstName: string;
@@ -11,6 +12,7 @@ function mapToUser(row: {
   registeredAt: Date;
 }): User {
   return {
+    id: row.id,
     telegramId: Number(row.telegramId),
     username: row.username,
     firstName: row.firstName,
