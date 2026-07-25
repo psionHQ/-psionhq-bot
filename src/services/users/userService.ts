@@ -1,6 +1,7 @@
 import type { TelegramUserRegistrationData, User, UserLanguage } from '../../types';
 import type { UserRepository, UserServiceContract } from './interfaces';
 import type { WalletServiceContract } from '../wallets/interfaces';
+import type { ReferralServiceContract } from '../referral/interfaces';
 
 function normalizeLanguage(languageCode: string | undefined): UserLanguage {
   return languageCode?.toLowerCase().startsWith('ru') ? 'ru' : 'en';
@@ -10,6 +11,7 @@ export class UserService implements UserServiceContract {
   constructor(
     private readonly repository: UserRepository,
     private readonly walletService: WalletServiceContract,
+    private readonly referralService: ReferralServiceContract,
   ) {}
 
   async registerOrUpdate(data: TelegramUserRegistrationData): Promise<User> {
@@ -31,12 +33,17 @@ export class UserService implements UserServiceContract {
       isActive: true,
       lastLoginAt: null,
       registeredAt: new Date(),
+      referralCode: data.telegramId.toString(),
     };
 
     const createdUser = await this.repository.create(user);
 
     if (createdUser.id !== undefined) {
       await this.walletService.createForUser(createdUser.id);
+
+      if (data.referredByCode) {
+        await this.referralService.processReferral(data.referredByCode, createdUser.id);
+      }
     }
 
     return createdUser;

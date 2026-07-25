@@ -16,6 +16,7 @@ export const MENU_CALLBACKS = {
   LANGUAGE: 'menu_language',
   WALLET: 'menu_wallet',
   HISTORY: 'menu_history',
+  REFERRAL: 'menu_referral',
   ADMIN: 'menu_admin',
 } as const;
 
@@ -104,6 +105,12 @@ export const MENU_ITEMS: MenuItem[] = [
     emoji: '📜',
     callback: MENU_CALLBACKS.HISTORY,
     description: 'Latest transactions',
+  },
+  {
+    label: 'Referral',
+    emoji: '🔗',
+    callback: MENU_CALLBACKS.REFERRAL,
+    description: 'Invite friends and earn rewards',
   },
   {
     label: 'Language',
