@@ -2,6 +2,7 @@ export type UserRole = 'user' | 'admin';
 export type UserLanguage = 'en' | 'ru';
 
 export interface User {
+  id?: number;
   telegramId: number;
   username: string | null;
   firstName: string;

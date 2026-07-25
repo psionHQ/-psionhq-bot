@@ -1,12 +1,16 @@
 import type { TelegramUserRegistrationData, User, UserLanguage } from '../../types';
 import type { UserRepository, UserServiceContract } from './interfaces';
+import type { WalletServiceContract } from '../wallets/interfaces';
 
 function normalizeLanguage(languageCode: string | undefined): UserLanguage {
   return languageCode?.toLowerCase().startsWith('ru') ? 'ru' : 'en';
 }
 
 export class UserService implements UserServiceContract {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly walletService: WalletServiceContract,
+  ) {}
 
   async registerOrUpdate(data: TelegramUserRegistrationData): Promise<User> {
     const existingUser = await this.repository.findByTelegramId(data.telegramId);
@@ -27,7 +31,13 @@ export class UserService implements UserServiceContract {
       registeredAt: new Date(),
     };
 
-    return this.repository.create(user);
+    const createdUser = await this.repository.create(user);
+
+    if (createdUser.id !== undefined) {
+      await this.walletService.createForUser(createdUser.id);
+    }
+
+    return createdUser;
   }
 
   async getByTelegramId(telegramId: number): Promise<User | null> {

@@ -14,6 +14,7 @@ export const MENU_CALLBACKS = {
   ABOUT: 'menu_about',
   PROFILE: 'menu_profile',
   LANGUAGE: 'menu_language',
+  WALLET: 'menu_wallet',
 } as const;
 
 export const LANGUAGE_CALLBACKS = {
@@ -82,6 +83,12 @@ export const MENU_ITEMS: MenuItem[] = [
     emoji: '👤',
     callback: MENU_CALLBACKS.PROFILE,
     description: 'Your profile details',
+  },
+  {
+    label: 'Wallet',
+    emoji: '💰',
+    callback: MENU_CALLBACKS.WALLET,
+    description: 'Your PSI wallet',
   },
   {
     label: 'Language',

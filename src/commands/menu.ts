@@ -2,8 +2,8 @@ import { bot } from '../bot';
 import { LANGUAGE_CALLBACKS, MENU_CALLBACKS } from '../constants/menu';
 import { getLanguageSelectionKeyboard, getMenuItemByCallback } from '../utils/keyboard';
 import { logger } from '../utils/logger';
-import { userService } from '../services';
-import type { User, UserLanguage } from '../types';
+import { userService, walletService } from '../services';
+import type { User, UserLanguage, Wallet } from '../types';
 
 /**
  * Development message for menu items under development
@@ -52,6 +52,34 @@ ${text.profileTitle}
 🗣️ ${text.language}: ${profileLanguage}
 🎭 ${text.role}: ${user.role}
 📅 ${text.registeredAt}: ${registrationDate}
+  `.trim();
+}
+
+const WALLET_TRANSLATIONS = {
+  en: {
+    walletTitle: '💰 Your Wallet',
+    address: 'Address',
+    balance: 'Balance',
+    registeredAt: 'Registered',
+  },
+  ru: {
+    walletTitle: '💰 Ваш кошелёк',
+    address: 'Адрес',
+    balance: 'Баланс',
+    registeredAt: 'Дата регистрации',
+  },
+} as const;
+
+function formatWalletMessage(user: User, wallet: Wallet): string {
+  const language: UserLanguage = user.language;
+  const text = WALLET_TRANSLATIONS[language];
+
+  return `
+${text.walletTitle}
+
+🏠 ${text.address}: ${wallet.address}
+💎 ${text.balance}: ${wallet.balance} PSI
+📅 ${text.registeredAt}: ${user.registeredAt.toISOString()}
   `.trim();
 }
 
@@ -141,6 +169,37 @@ bot.action(LANGUAGE_CALLBACKS.RUSSIAN, async (ctx) => {
  * Register all menu callbacks
  * When adding new menu items, register their callbacks here
  */
+
+// Wallet menu item
+bot.action(MENU_CALLBACKS.WALLET, async (ctx) => {
+  if (!ctx.from) {
+    await ctx.answerCbQuery();
+    return;
+  }
+
+  const user =
+    (await userService.getByTelegramId(ctx.from.id)) ??
+    (await userService.registerOrUpdate({
+      telegramId: ctx.from.id,
+      username: ctx.from.username ?? null,
+      firstName: ctx.from.first_name,
+      languageCode: ctx.from.language_code,
+    }));
+
+  let wallet = user.id !== undefined ? await walletService.getByUserId(user.id) : null;
+  if (!wallet && user.id !== undefined) {
+    wallet = await walletService.createForUser(user.id);
+  }
+
+  await ctx.answerCbQuery();
+
+  if (!wallet) {
+    await ctx.reply('⚠️ Wallet not available. Please try again later.');
+    return;
+  }
+
+  await ctx.reply(formatWalletMessage(user, wallet));
+});
 
 // News menu item
 handleMenuItemUnderDevelopment(MENU_CALLBACKS.NEWS);
