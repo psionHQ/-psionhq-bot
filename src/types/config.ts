@@ -1,5 +1,14 @@
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+export interface EconomyConfig {
+  maxSupply: number;
+  initialSupply: number;
+  treasuryWalletAddress: string;
+  rewardPoolAddress: string;
+  transferFeePercent: number;
+  dailyRewardAmount: number;
+}
+
 export interface AppConfig {
   app: {
     nodeEnv: string;
@@ -15,4 +24,5 @@ export interface AppConfig {
   logger: {
     level: LogLevel;
   };
+  economy: EconomyConfig;
 }

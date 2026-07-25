@@ -50,16 +50,26 @@ model User {
 }
 
 model Wallet {
-  id                   Int           @id @default(autoincrement())
-  userId               Int           @unique
-  address              String        @unique
-  balance              Decimal       @default(0) @db.Decimal(18, 8)
-  createdAt            DateTime      @default(now())
-  user                 User          @relation(fields: [userId], references: [id])
-  outgoingTransactions Transaction[] @relation("WalletOutgoingTransactions")
-  incomingTransactions Transaction[] @relation("WalletIncomingTransactions")
+  id                   Int                @id @default(autoincrement())
+  userId               Int                @unique
+  address              String             @unique
+  balance              Decimal            @default(0) @db.Decimal(18, 8)
+  createdAt            DateTime           @default(now())
+  user                 User               @relation(fields: [userId], references: [id])
+  outgoingTransactions Transaction[]      @relation("WalletOutgoingTransactions")
+  incomingTransactions Transaction[]      @relation("WalletIncomingTransactions")
+  dailyRewardClaim     DailyRewardClaim?
 
   @@map("wallets")
+}
+
+model DailyRewardClaim {
+  id        Int      @id @default(autoincrement())
+  walletId  Int      @unique
+  claimedAt DateTime @default(now())
+  wallet    Wallet   @relation(fields: [walletId], references: [id])
+
+  @@map("daily_reward_claims")
 }
 
 model Transaction {
