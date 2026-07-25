@@ -1,16 +1,20 @@
 import { Markup } from 'telegraf';
-import { LANGUAGE_CALLBACKS, MENU_ITEMS } from '../constants/menu';
+import { ADMIN_CALLBACKS, ADMIN_MENU_ITEM, LANGUAGE_CALLBACKS, MENU_ITEMS } from '../constants/menu';
+import type { UserRole } from '../types';
 
 /**
- * Generate main menu keyboard with inline buttons
- * Buttons are arranged in 2-column layout for better UX
- * Easy to modify layout by changing the chunking logic
+ * Generate main menu keyboard with inline buttons.
+ * Appends an Admin button for ADMIN users.
+ * Buttons are arranged in 2-column layout for better UX.
  *
+ * @param role - Optional user role; ADMIN users see an extra admin button
  * @returns Telegram inline keyboard markup
  */
-export function getMainMenuKeyboard() {
+export function getMainMenuKeyboard(role?: UserRole) {
+  const items = role === 'ADMIN' ? [...MENU_ITEMS, ADMIN_MENU_ITEM] : MENU_ITEMS;
+
   // Create button array with emoji + label format
-  const buttons = MENU_ITEMS.map((item) =>
+  const buttons = items.map((item) =>
     Markup.button.callback(`${item.emoji} ${item.label}`, item.callback)
   );
 
@@ -31,7 +35,7 @@ export function getMainMenuKeyboard() {
  * @returns Menu item or undefined if not found
  */
 export function getMenuItemByCallback(callback: string) {
-  return MENU_ITEMS.find((item) => item.callback === callback);
+  return [...MENU_ITEMS, ADMIN_MENU_ITEM].find((item) => item.callback === callback);
 }
 
 export function getLanguageSelectionKeyboard() {
@@ -39,6 +43,24 @@ export function getLanguageSelectionKeyboard() {
     [
       Markup.button.callback('🇺🇸 English', LANGUAGE_CALLBACKS.ENGLISH),
       Markup.button.callback('🇷🇺 Русский', LANGUAGE_CALLBACKS.RUSSIAN),
+    ],
+  ]);
+}
+
+export function getAdminMenuKeyboard(language: 'en' | 'ru' = 'en') {
+  const labels =
+    language === 'ru'
+      ? { users: '👥 Пользователи', statistics: '📊 Статистика', roles: '⚙ Роли', history: '📋 История' }
+      : { users: '👥 Users', statistics: '📊 Statistics', roles: '⚙ Roles', history: '📋 History' };
+
+  return Markup.inlineKeyboard([
+    [
+      Markup.button.callback(labels.users, ADMIN_CALLBACKS.USERS),
+      Markup.button.callback(labels.statistics, ADMIN_CALLBACKS.STATISTICS),
+    ],
+    [
+      Markup.button.callback(labels.roles, ADMIN_CALLBACKS.ROLES),
+      Markup.button.callback(labels.history, ADMIN_CALLBACKS.HISTORY),
     ],
   ]);
 }

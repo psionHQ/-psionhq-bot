@@ -7,9 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  user
-  admin
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
 }
 
 enum UserLanguage {
@@ -32,14 +33,18 @@ enum TransactionStatus {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  telegramId   BigInt       @unique
-  username     String?
-  firstName    String
-  language     UserLanguage @default(en)
-  role         UserRole     @default(user)
-  registeredAt DateTime     @default(now())
-  wallet       Wallet?
+  id            Int           @id @default(autoincrement())
+  telegramId    BigInt        @unique
+  username      String?
+  firstName     String
+  language      UserLanguage  @default(en)
+  role          Role          @default(USER)
+  isActive      Boolean       @default(true)
+  lastLoginAt   DateTime?
+  registeredAt  DateTime      @default(now())
+  wallet        Wallet?
+  adminActions  AdminAction[] @relation("AdminActions")
+  targetActions AdminAction[] @relation("TargetActions")
 
   @@map("users")
 }
@@ -73,4 +78,20 @@ model Transaction {
   @@index([toWalletId])
   @@index([createdAt])
   @@map("transactions")
+}
+
+model AdminAction {
+  id           String   @id @default(uuid()) @db.Uuid
+  adminId      Int
+  action       String
+  targetUserId Int?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  admin        User     @relation("AdminActions", fields: [adminId], references: [id])
+  target       User?    @relation("TargetActions", fields: [targetUserId], references: [id])
+
+  @@index([adminId])
+  @@index([targetUserId])
+  @@index([createdAt])
+  @@map("admin_actions")
 }

@@ -1,4 +1,4 @@
-export type UserRole = 'user' | 'admin';
+export type UserRole = 'USER' | 'MODERATOR' | 'ADMIN';
 export type UserLanguage = 'en' | 'ru';
 
 export interface User {
@@ -8,6 +8,8 @@ export interface User {
   firstName: string;
   language: UserLanguage;
   role: UserRole;
+  isActive: boolean;
+  lastLoginAt: Date | null;
   registeredAt: Date;
 }
 

@@ -9,6 +9,8 @@ function mapToUser(row: {
   firstName: string;
   language: string;
   role: string;
+  isActive: boolean;
+  lastLoginAt: Date | null;
   registeredAt: Date;
 }): User {
   return {
@@ -18,6 +20,8 @@ function mapToUser(row: {
     firstName: row.firstName,
     language: row.language as UserLanguage,
     role: row.role as UserRole,
+    isActive: row.isActive,
+    lastLoginAt: row.lastLoginAt,
     registeredAt: row.registeredAt,
   };
 }
@@ -49,6 +53,8 @@ export class PrismaUserRepository implements UserRepository {
         firstName: entity.firstName,
         language: entity.language,
         role: entity.role,
+        isActive: entity.isActive,
+        lastLoginAt: entity.lastLoginAt,
         registeredAt: entity.registeredAt,
       },
     });
@@ -63,6 +69,8 @@ export class PrismaUserRepository implements UserRepository {
         ...(entity.firstName !== undefined && { firstName: entity.firstName }),
         ...(entity.language !== undefined && { language: entity.language }),
         ...(entity.role !== undefined && { role: entity.role }),
+        ...(entity.isActive !== undefined && { isActive: entity.isActive }),
+        ...(entity.lastLoginAt !== undefined && { lastLoginAt: entity.lastLoginAt }),
       },
     });
     return mapToUser(user);
