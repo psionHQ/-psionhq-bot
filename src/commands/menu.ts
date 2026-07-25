@@ -1,6 +1,7 @@
 import { bot } from '../bot';
 import { MENU_CALLBACKS } from '../constants/menu';
 import { getMenuItemByCallback } from '../utils/keyboard';
+import { logger } from '../utils/logger';
 
 /**
  * Development message for menu items under development
@@ -19,7 +20,7 @@ function handleMenuItemUnderDevelopment(callback: string) {
     const menuItem = getMenuItemByCallback(callback);
     const itemName = menuItem?.label || 'Unknown';
 
-    console.log(`📌 User accessed: ${itemName} (${callback})`);
+    logger.info(`📌 User accessed: ${itemName} (${callback})`);
 
     // Answer the callback query (remove loading state)
     ctx.answerCbQuery();
@@ -55,4 +56,4 @@ handleMenuItemUnderDevelopment(MENU_CALLBACKS.COMMUNITY);
 // About menu item
 handleMenuItemUnderDevelopment(MENU_CALLBACKS.ABOUT);
 
-console.log('✅ Menu callbacks registered');
+logger.info('✅ Menu callbacks registered');
