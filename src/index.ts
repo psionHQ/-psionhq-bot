@@ -5,6 +5,7 @@ import "./commands/start";
 import "./commands/help";
 import "./commands/about";
 import "./commands/menu";
+import "./commands/admin";
 
 import { bot } from "./bot";
 import { setupErrorHandler } from "./middleware/errorHandler";

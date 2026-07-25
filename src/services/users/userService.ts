@@ -27,7 +27,9 @@ export class UserService implements UserServiceContract {
       username: data.username,
       firstName: data.firstName,
       language: normalizeLanguage(data.languageCode),
-      role: 'user',
+      role: 'USER',
+      isActive: true,
+      lastLoginAt: null,
       registeredAt: new Date(),
     };
 
@@ -42,6 +44,10 @@ export class UserService implements UserServiceContract {
 
   async getByTelegramId(telegramId: number): Promise<User | null> {
     return this.repository.findByTelegramId(telegramId);
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return this.repository.findAll();
   }
 
   async setLanguage(telegramId: number, language: UserLanguage): Promise<User | null> {

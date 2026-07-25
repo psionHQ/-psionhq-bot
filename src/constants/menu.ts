@@ -16,11 +16,19 @@ export const MENU_CALLBACKS = {
   LANGUAGE: 'menu_language',
   WALLET: 'menu_wallet',
   HISTORY: 'menu_history',
+  ADMIN: 'menu_admin',
 } as const;
 
 export const LANGUAGE_CALLBACKS = {
   ENGLISH: 'lang_en',
   RUSSIAN: 'lang_ru',
+} as const;
+
+export const ADMIN_CALLBACKS = {
+  USERS: 'admin_users',
+  STATISTICS: 'admin_statistics',
+  ROLES: 'admin_roles',
+  HISTORY: 'admin_history',
 } as const;
 
 /**
@@ -104,3 +112,10 @@ export const MENU_ITEMS: MenuItem[] = [
     description: 'Language settings',
   },
 ];
+
+export const ADMIN_MENU_ITEM: MenuItem = {
+  label: 'Admin',
+  emoji: '🔐',
+  callback: MENU_CALLBACKS.ADMIN,
+  description: 'Admin panel',
+};

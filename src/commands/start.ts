@@ -7,13 +7,16 @@ import { userService } from '../services';
  * Displays welcome message with interactive main menu
  */
 bot.start(async (ctx) => {
+  let role: 'USER' | 'MODERATOR' | 'ADMIN' | undefined;
+
   if (ctx.from) {
-    await userService.registerOrUpdate({
+    const user = await userService.registerOrUpdate({
       telegramId: ctx.from.id,
       username: ctx.from.username ?? null,
       firstName: ctx.from.first_name,
       languageCode: ctx.from.language_code,
     });
+    role = user.role;
   }
 
   const welcomeMessage = `
@@ -24,7 +27,7 @@ bot.start(async (ctx) => {
 Выберите интересующий вас раздел:
 `;
 
-  const keyboard = getMainMenuKeyboard();
+  const keyboard = getMainMenuKeyboard(role);
 
   await ctx.reply(welcomeMessage, keyboard);
 });

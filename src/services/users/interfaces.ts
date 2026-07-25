@@ -8,5 +8,6 @@ export interface UserRepository extends Repository<User, number> {
 export interface UserServiceContract {
   registerOrUpdate(data: TelegramUserRegistrationData): Promise<User>;
   getByTelegramId(telegramId: number): Promise<User | null>;
+  getAllUsers(): Promise<User[]>;
   setLanguage(telegramId: number, language: UserLanguage): Promise<User | null>;
 }
